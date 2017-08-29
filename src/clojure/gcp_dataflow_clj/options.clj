@@ -1,5 +1,4 @@
-(ns gcp-dataflow-clj.options
-  )
+(ns gcp-dataflow-clj.options)
 
 (gen-interface
  :name WordCountOptions
