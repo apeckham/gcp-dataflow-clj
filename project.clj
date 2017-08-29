@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.apache.beam/beam-sdks-java-core "2.1.0"]
                  [org.apache.beam/beam-sdks-java-io-google-cloud-platform "2.0.0" :exclusions [io.grpc/grpc-core io.netty/netty-codec-http2]]
+                 [org.apache.beam/beam-runners-google-cloud-dataflow-java "2.1.0" :exclusions [io.grpc/grpc-core io.netty/netty-codec-http2]]
                  [org.apache.beam/beam-runners-direct-java "2.1.0"]]
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
