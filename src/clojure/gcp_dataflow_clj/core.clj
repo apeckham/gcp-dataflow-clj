@@ -1,5 +1,6 @@
 (ns gcp-dataflow-clj.core
   (:gen-class)
+  (:require [clojure.string :as str])
   (:import beam.ClojureDoFn
            org.apache.beam.sdk.coders.StringUtf8Coder
            org.apache.beam.sdk.io.TextIO
@@ -10,12 +11,14 @@
 (def extract-words
   (ClojureDoFn.
    (fn [context]
-     (doseq [word (clojure.string/split (.element context) #"[^\\p{L}]+")]
+     (doseq [word (->> #"[^\\p{L}]+"
+                       (str/split (.element context))
+                       (filter (complement str/blank?)))]
        (.output context word)))))
 
 (def format-results
   (proxy [SimpleFunction] []
-    (apply ^String [input]
+    (apply [input]
       (str (.getKey input) ": " (.getValue input)))))
 
 (defn -main
