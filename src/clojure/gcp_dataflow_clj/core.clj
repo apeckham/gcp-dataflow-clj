@@ -5,6 +5,7 @@
            org.apache.beam.sdk.coders.StringUtf8Coder
            org.apache.beam.sdk.io.TextIO
            org.apache.beam.sdk.options.PipelineOptionsFactory
+           WordCountOptions
            org.apache.beam.sdk.Pipeline
            [org.apache.beam.sdk.transforms Count MapElements ParDo SimpleFunction]))
 
@@ -24,8 +25,9 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (let [options (PipelineOptionsFactory/create)
+  (let [options (.as (.withValidation (PipelineOptionsFactory/fromArgs (into-array String args))) WordCountOptions)
         p (Pipeline/create)]
+    (prn options)
     (-> p
         (.apply (-> (TextIO/read)
                     (.from "gs://apache-beam-samples/shakespeare/*")))
