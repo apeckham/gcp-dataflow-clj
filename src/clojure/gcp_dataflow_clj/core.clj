@@ -9,13 +9,14 @@
            org.apache.beam.sdk.Pipeline
            [org.apache.beam.sdk.transforms Count MapElements ParDo SimpleFunction]))
 
-(def extract-words
-  (ClojureDoFn.
-   (fn [context]
-     (doseq [word (->> #"[^\\p{L}]+"
-                       (str/split (.element context))
-                       (filter (complement str/blank?)))]
-       (.output context word)))))
+(defn par-do [f]
+  (ParDo/of (ClojureDoFn. f)))
+
+(defn extract-words [context]
+  (doseq [word (->> #"[^\\p{L}]+"
+                    (str/split (.element context))
+                    (filter (complement str/blank?)))]
+    (.output context word)))
 
 (def format-results
   (proxy [SimpleFunction] []
@@ -25,13 +26,14 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (let [options (.as (.withValidation (PipelineOptionsFactory/fromArgs (into-array String args))) WordCountOptions)
+  (let [options-factory (PipelineOptionsFactory/fromArgs (into-array String args))
+        options (-> options-factory .withValidation (.as WordCountOptions))
         p (Pipeline/create)]
     (prn options)
     (-> p
         (.apply (-> (TextIO/read)
                     (.from "gs://apache-beam-samples/shakespeare/*")))
-        (.apply "ExtractWords" (ParDo/of extract-words))
+        (.apply "ExtractWords" (par-do extract-words))
         (.apply (Count/perElement))
         (.apply "FormatResults" (MapElements/via format-results))
         (.setCoder (StringUtf8Coder/of))
