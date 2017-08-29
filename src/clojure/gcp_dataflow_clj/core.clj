@@ -10,7 +10,7 @@
 (def extract-words
   (ClojureDoFn.
    (fn [context]
-     (doseq [word (clojure.string/split (.element context) #"\s+")]
+     (doseq [word (clojure.string/split (.element context) #"[^\\p{L}]+")]
        (.output context word)))))
 
 (def format-results
