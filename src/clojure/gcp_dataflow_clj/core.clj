@@ -1,11 +1,11 @@
 (ns gcp-dataflow-clj.core
   (:gen-class)
   (:require [clojure.string :as str])
-  (:import WordCountOptions
-           beam.ClojureDoFn
+  (:import beam.ClojureDoFn
            org.apache.beam.sdk.coders.StringUtf8Coder
            org.apache.beam.sdk.io.TextIO
            org.apache.beam.sdk.options.PipelineOptionsFactory
+           org.apache.beam.sdk.options.PipelineOptions
            org.apache.beam.sdk.Pipeline
            [org.apache.beam.sdk.transforms Count MapElements ParDo SimpleFunction]))
 
@@ -26,12 +26,20 @@
 (defn format-results [input]
   (str (.getKey input) ": " (.getValue input)))
 
+(gen-interface
+ :name MyOptions
+ :extends [org.apache.beam.sdk.options.PipelineOptions]
+ :methods [[^{org.apache.beam.sdk.options.Description "Foo test parameter"}
+            getFoo [] String]
+           [setFoo [String] void]])
+
 (defn args->options [args]
   (-> String
       (into-array args)
       PipelineOptionsFactory/fromArgs
       .withValidation
-      (.as WordCountOptions)))
+      (.as PipelineOptions)
+      #_(.as 'MyOptions)))
 
 (defn -main
   [& args]

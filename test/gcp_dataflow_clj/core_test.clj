@@ -1,7 +1,7 @@
 (ns gcp-dataflow-clj.core-test
   (:require [clojure.test :refer :all]
-            [gcp-dataflow-clj.core :refer :all]))
+            [gcp-dataflow-clj.core :refer :all])
+  (:import org.apache.beam.runners.dataflow.DataflowRunner))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest my-options
+  (is (= DataflowRunner (.getRunner (args->options ["--runner=DataflowRunner"])))))
