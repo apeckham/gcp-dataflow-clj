@@ -13,4 +13,5 @@
   :main ^:skip-aot gcp-dataflow-clj.core
   :aot :all
   :target-path "target/%s"
+  :plugins [[com.jakemccrary/lein-test-refresh "0.21.1"]]
   :profiles {:uberjar {:aot :all}})
