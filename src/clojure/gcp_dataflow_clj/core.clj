@@ -1,13 +1,14 @@
 (ns gcp-dataflow-clj.core
   (:gen-class)
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            gcp-dataflow-clj.my-options)
   (:import beam.ClojureDoFn
+           MyOptions
            org.apache.beam.sdk.coders.StringUtf8Coder
            org.apache.beam.sdk.io.TextIO
            org.apache.beam.sdk.options.PipelineOptionsFactory
-           org.apache.beam.sdk.options.PipelineOptions
            org.apache.beam.sdk.Pipeline
-           [org.apache.beam.sdk.transforms Count MapElements ParDo SimpleFunction]))
+           [org.apache.beam.sdk.transforms Count DoFnTester MapElements ParDo SimpleFunction]))
 
 (defn par-do [f]
   (ParDo/of (ClojureDoFn. f)))
@@ -31,7 +32,7 @@
       (into-array args)
       PipelineOptionsFactory/fromArgs
       .withValidation
-      (.as gcp-dataflow-clj.my-options.MyOptions)))
+      (.as MyOptions)))
 
 (defn -main
   [& args]
