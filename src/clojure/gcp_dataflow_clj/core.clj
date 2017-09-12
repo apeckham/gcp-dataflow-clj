@@ -26,20 +26,12 @@
 (defn format-results [input]
   (str (.getKey input) ": " (.getValue input)))
 
-(gen-interface
- :name MyOptions
- :extends [org.apache.beam.sdk.options.PipelineOptions]
- :methods [[^{org.apache.beam.sdk.options.Description "Foo test parameter"}
-            getFoo [] String]
-           [setFoo [String] void]])
-
 (defn args->options [args]
   (-> String
       (into-array args)
       PipelineOptionsFactory/fromArgs
       .withValidation
-      (.as PipelineOptions)
-      #_(.as 'MyOptions)))
+      (.as gcp-dataflow-clj.my-options.MyOptions)))
 
 (defn -main
   [& args]

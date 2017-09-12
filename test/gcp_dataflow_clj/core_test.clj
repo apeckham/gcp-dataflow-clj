@@ -4,4 +4,6 @@
   (:import org.apache.beam.runners.dataflow.DataflowRunner))
 
 (deftest my-options
-  (is (= DataflowRunner (.getRunner (args->options ["--runner=DataflowRunner"])))))
+  (let [opts (args->options ["--runner=DataflowRunner" "--foos=barbaz"])]
+    (is (= DataflowRunner (.getRunner opts)))
+    (is (= "barbaz" (.getFoos opts)))))
